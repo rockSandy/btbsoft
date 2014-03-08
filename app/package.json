@@ -1,0 +1,21 @@
+{
+  "main": "index.html",
+  "name": "比特币交易助手",
+  "description": "",
+  "version": "0.1.0",
+  "keywords": [ ""],
+  "window": {
+    "title": "比特币交易助手",
+    "icon": "link.png",
+    "toolbar": true,
+    "frame": true,
+    "width":1000,
+    "height":700,
+    "position": "mouse",
+    "min_width": 800,
+    "min_height": 600
+  },
+  "webkit": {
+    "plugin": false
+  }
+}
