@@ -9,11 +9,11 @@
     "icon": "link.png",
     "toolbar": true,
     "frame": true,
-    "width":1000,
+    "width":1300,
     "height":700,
     "position": "mouse",
-    "min_width": 800,
-    "min_height": 600
+    "min_width": 1300,
+    "min_height": 550
   },
   "webkit": {
     "plugin": false

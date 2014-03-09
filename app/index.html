@@ -5,235 +5,272 @@
 <link rel="stylesheet" href="theme/index.css">
 <title>比特币交易助手</title>
 </head>
-<body>
+<body class="col-g t-c">
 
 <div class="container">
-    <header>
-        <div class="header-logo f-l"></div>
-        <div class="header-btn f-r">
-            账号
+    <header ki-app="header">
+        <div class="header-btn f-l fz-16">
+            <input type="checkbox" ki-bind="checked:btc_checked|onclick:btc_click">
+            比特币(BTC)交易
         </div>
+        <div class="header-btn f-l fz-16">
+             <input type="checkbox" ki-bind="checked:ltc_checked|onclick:ltc_click">
+            莱特币(LTC)交易
+        </div>
+        <div class="header-btn f-r fz-25">账号</div>
+        <div class="header-btn f-r fz-25">设置</div>
     </header>
     <section>
-        <div id="nav">
-            <div class="user-info free">
-                <div class="user-info-title">
-                    <div class="sign sign-up"></div>
-                    <span>可用资产</span>
-                </div>
-                <ul class="fz-f">
-                    <li>
-                        <span class="col-g">CNY : </span><span class="col-b">1000.64</span>
-                    </li>
-                   <li>
-                        <span class="col-g">BTC : </span><span class="col-b">0</span>
-                    </li>
-                    <li>
-                        <span class="col-g">LTC : </span><span class="col-b">0</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="line-w"></div>
-            <div class="user-info freeze">
-                <div class="user-info-title">
-                    <div class="sign sign-down"></div>
-                    <span>冻结资产</span>
-                </div>
-                <ul class="fz-f">
-                    <li>
-                        <span class="col-g">CNY : </span><span class="col-b">1000.64</span>
-                    </li>
-                   <li>
-                        <span class="col-g">BTC : </span><span class="col-b">0</span>
-                    </li>
-                    <li>
-                        <span class="col-g">LTC : </span><span class="col-b">0</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="line-w"></div>
-            <ul class="nav-list">
-                <li class="focus">
-                    <span>比特币交易</span>
-                    <div class="select"></div>
-                </li>
-                <li>
-                    <span>莱特币交易</span>
-                    <div class="select"></div>
-                </li>
-                <li>
-                    <span>委托管理</span>
-                    <div class="select"></div>
-                </li>
-            </ul>
-
-        </div>
-        <div id="content" class="col-g">
-            
-            <div id="btc-edit">
-                <ul class="btc-edit-type">
-                    <li class="cu-p hv-bg-g t-c focus">买入BTC</li>
-                    <li class="cu-p hv-bg-g t-c">卖出BTC</li>
-                </ul>
-                <div class="buy-btc">
-                    <div class="buy-btc-info">
-                        <p>
-                            <span>人民币余额: </span><span class="col-gn">1000.64</span>
-                        </p>
-                        <p>
-                            <span>大约可买BTC: </span><span class="col-gn">0.264</span>
-                        </p>
-                    </div>
-                    <div class="edit-form">
-                        <div class="row">
-                            <div class="label">市价单</div>
-                            <div class="input">
-                                 <input type="checkbox">
-                                 <span class="fz-12">
-                                 市价下单是指按深度逐个成交，<strong class="col-r">请注意风险。</strong>
-                                 </span>                               
-                            </div>
+        <div id="bus" class="fz-16">
+            <div class="form f-l w-40 t-l">
+                <fieldset>
+                    <legend>买入</legend>
+                    <div class="row">             
+                        <div class="w-40 column">
+                            当前人民币余额: <span class="col-r">1000</span>
                         </div>
-                        <div class="row">
-                            <div class="label">出价:</div>
-                            <div class="input">
-                                 <input type="text" class="form-input">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="label">购买数量:</div>
-                            <div class="input">
-                                 <input type="text" class="form-input">
-                                总金额 <span class="col-gn">1000</span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="label">交易密码: </div>
-                            <div class="input">
-                                <input type="password" class="form-input">
-                                <span>(免输交易密码)</span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="label"></div>
-                            <div class="input">
-                                <button class="submit">立即买入</button>
-                            </div>
+                        <div class="w-10 column"></div>
+                        <div class="w-40 column">
+                            可买BTC: <span class="col-r">0.1</span>
                         </div>
                     </div>
-                </div>
+                    <div class="row">             
+                        <div class="w-20 column">
+                            总资产: <span class="col-r">1000</span>
+                        </div>
+                        <div class="w-30 column">
+                            <button class="btn-small">隐藏总资产</button>
+                        </div>
+                        <div class="w-20 column">
+                            <button class="btn-small">刷新</button>
+                        </div>
+                    </div>
+                    <div class="line-w"></div>
+                    <div class="row t-c">
+                        <div class="w-30 column">出价</div>
+                        <div class="w-5 column"></div>
+                        <div class="w-30 column">购买数量</div>
+                        <div class="w-5 column"></div>
+                        <div class="w-30 column">所需总金额</div>
+                    </div>
+                    <div class="row t-c">
+                        <div class="w-30 column">
+                            <div class="mi-btn dp-i" title="微调">-</div
+                            ><input type="text" class="dp-i"
+                            ><div class="mi-btn dp-i" title="微调">+</div>
+                        </div>
+                        <div class="w-5 column fz-20">*</div>
+                        <div class="w-30 column">
+                            <div class="mi-btn dp-i" title="微调">-</div
+                            ><input type="text" class="dp-i"
+                            ><div class="mi-btn dp-i" title="微调">+</div>
+                        </div>
+                        <div class="w-5 column fz-20">=</div>
+                        <div class="w-30 column">
+                            <input type="text" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="row t-c" style="margin-top:10px;">
+                        <div class="w-30 column">
+                            <button class="btn-small">按卖1出价</button>
+                        </div>
+                        <div class="w-5 column"></div>
+                        <div class="w-60 column">
+                            <button class="btn-small">全部</button>
+                            <button class="btn-small">1/2</button>
+                            <button class="btn-small">1/3</button>
+                            <button class="btn-small">1/4</button>
+                            <button class="btn-small">1/5</button>
+                        </div>
+                    </div>
+                    <div class="row t-c" style="margin-top:10px;">
+                        <div class="w-30 column">
+                            <button class="btn-small">按卖5出价</button>
+                        </div>
+                        <div class="w-5 column"></div>
+                        <div class="w-60 column">
+                            <button class="btn-small">1/6</button>
+                            <button class="btn-small">1/7</button>
+                            <button class="btn-small">1/8</button>
+                            <button class="btn-small">1/9</button>
+                            <button class="btn-small">1/10</button>
+                        </div>
+                    </div>
+                    <div class="row t-c" style="margin-top:10px;">
+                        <div class="w-30 column">
+                            <button class="btn-small">按卖1价多1分</button>
+                        </div>
+                        <div class="w-10 column"></div>
+                        <div class="w-60 column t-l">
+                            交易密码 : &nbsp;
+                            <input type="text" style="width:100px;">
+                        </div>
+                    </div>
+                    <div class="row t-c" style="margin-top:10px;">
+                        <div class="w-40 column">
+                            
+                        </div>
+                        <div class="w-60 column t-l">
+                            <button class="btn-large">立即买入</button>
+                        </div>
+                    </div>
+                </fieldset>
             </div>
+            <div class="bus-info f-l w-20" ki-app="bus-info">
+                <div class="box t-l">
+                    <div class="f-l w-60 t-c">
+                        最新价格：<span class="col-gn">￥</span>
+                    </div>
+                    
+                    <span class="col-gn" ki-bind="innerHTML:last_price"></span>
+                </div>
+                <div class="box">
+                    <table border="0" cellspacing="0" cellpadding="0" ki-tpl="bus-temp:trick_depth">
+                    
+                    </table>
+                </div>
+                
+            </div>
+            <div class="form f-l w-40 t-l">
+                <fieldset>
+                    <legend>买入</legend>
+                    <div class="row">             
+                        <div class="w-40 column">
+                            BTC/LTC余额: <span class="col-r">12</span>
+                        </div>
+                        <div class="w-10 column"></div>
+                        <div class="w-40 column">
+                            可卖人民币: <span class="col-r">1000</span>
+                        </div>
+                    </div>
+                    <div class="row">             
+                        <div class="w-20 column">
+                            <button class="btn-small">刷新余额</button>
+                        </div>
 
-        </div>
-        <div id="info" class="">
-            <div class="update box-border">
-                <div class="update-progress"></div>
-                <div class="update-time col-g t-c">
-                    <span>刷新时间</span>
-                    <select name="">
-                        <option value="">1s</option>
-                        <option value="">2s</option>
-                        <option value="">3s</option>
-                        <option value="">4s</option>
-                        <option value="">5s</option>
-                    </select>
-                    <span> 剩余时间 : </span><span>5s</span>
-                </div>
-            </div>
-            <div class="money-type box-border col-g t-c">
-                <div class="focus">比特币</div><div>莱特币</div>
-            </div>
-            <div class="last-price box-border col-g t-c">
-                <div class="last-more f-r t-c hv-bg-g cu-p">更多</div>
-                <span>最新成交价 : </span><span class="col-y">3703.4</span>
-            </div>
-            <div class="bus-list box-border col-g t-c">
-                <table border="0" cellspacing="0" cellpadding="0">
-                    <thead>
-                        <tr>
-                            <td>买卖</td>
-                            <td>价格</td>
-                            <td>委托量</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="col-r">
-                            <td>卖(1)</td>
-                            <td>3707.63</td>
-                            <td>฿0.55</td>
-                        </tr>
-                        <tr class="col-r">
-                            <td>卖(1)</td>
-                            <td>3707.63</td>
-                            <td>฿0.55</td>
-                        </tr>
-                        <tr class="col-r">
-                            <td>卖(1)</td>
-                            <td>3707.63</td>
-                            <td>฿0.55</td>
-                        </tr>
-                        <tr class="col-r">
-                            <td>卖(1)</td>
-                            <td>3707.63</td>
-                            <td>฿0.55</td>
-                        </tr>
-                        <tr class="col-r">
-                            <td>卖(1)</td>
-                            <td>3707.63</td>
-                            <td>฿0.55</td>
-                        </tr>
-                        <tr class="col-r">
-                            <td>卖(1)</td>
-                            <td>3707.63</td>
-                            <td>฿0.55</td>
-                        </tr>
-                        <tr class="col-r">
-                            <td>卖(1)</td>
-                            <td>3707.63</td>
-                            <td>฿0.55</td>
-                        </tr>
-                        <tr class="col-r">
-                            <td>卖(1)</td>
-                            <td>3707.63</td>
-                            <td>฿0.55</td>
-                        </tr>
-                        <tr class="col-r">
-                            <td>卖(1)</td>
-                            <td>3707.63</td>
-                            <td>฿0.55</td>
-                        </tr>
-                        <tr class="col-r">
-                            <td>卖(1)</td>
-                            <td>3707.63</td>
-                            <td>฿0.55</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                    </div>
+                    <div class="line-w"></div>
+                    <div class="row t-c">
+                        <div class="w-30 column">售价</div>
+                        <div class="w-5 column"></div>
+                        <div class="w-30 column">卖出数量</div>
+                        <div class="w-5 column"></div>
+                        <div class="w-30 column">大约可兑换CNY</div>
+                    </div>
+                    <div class="row t-c">
+                        <div class="w-30 column">
+                            <div class="mi-btn dp-i" title="微调">-</div
+                            ><input type="text" class="dp-i"
+                            ><div class="mi-btn dp-i" title="微调">+</div>
+                        </div>
+                        <div class="w-5 column fz-20">*</div>
+                        <div class="w-30 column">
+                            <div class="mi-btn dp-i" title="微调">-</div
+                            ><input type="text" class="dp-i"
+                            ><div class="mi-btn dp-i" title="微调">+</div>
+                        </div>
+                        <div class="w-5 column fz-20">=</div>
+                        <div class="w-30 column">
+                            <input type="text" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="row t-c" style="margin-top:10px;">
+                        <div class="w-30 column">
+                            <button class="btn-small">按买5出价</button>
+                        </div>
+                        <div class="w-5 column"></div>
+                        <div class="w-60 column">
+                            <button class="btn-small">全部</button>
+                            <button class="btn-small">1/2</button>
+                            <button class="btn-small">1/3</button>
+                            <button class="btn-small">1/4</button>
+                            <button class="btn-small">1/5</button>
+                        </div>
+                    </div>
+                    <div class="row t-c" style="margin-top:10px;">
+                        <div class="w-30 column">
+                            <button class="btn-small">卖1价少1分挂单</button>
+                        </div>
+                        <div class="w-5 column"></div>
+                        <div class="w-60 column">
+                            <button class="btn-small">1/6</button>
+                            <button class="btn-small">1/7</button>
+                            <button class="btn-small">1/8</button>
+                            <button class="btn-small">1/9</button>
+                            <button class="btn-small">1/10</button>
+                        </div>
+                    </div>
+                    <div class="row t-c" style="margin-top:10px;">
+                        <div class="w-30 column">
+                        </div>
+                        <div class="w-10 column"></div>
+                        <div class="w-60 column t-l">
+                            交易密码 : &nbsp;
+                            <input type="text" style="width:100px;">
+                        </div>
+                    </div>
+                    <div class="row t-c" style="margin-top:10px;">
+                        <div class="w-40 column">
+                            
+                        </div>
+                        <div class="w-60 column t-l">
+                            <button class="btn-large">立即卖出</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>       
         </div>
     </section>
+    <footer></footer>
 </div>
 
-<div id="last-truse-list" class="dp-n">
-    <div class="box-border t-c col-g t-c hv-bg-g cu-p">关闭</div>
-    <div class="box-border col-g t-c table-wrap">
-        <table border="0" cellspacing="0" cellpadding="0">
-            <thead>
-                <tr>
-                    <td>买卖</td>
-                    <td>价格</td>
-                    <td>委托量</td>
-                </tr>
-            </thead>
-            <tbody>
-                
-            </tbody>
-        </table>
-    </div>
-</div>
+
+<script type="text/template" id="bus-temp">
+    {$
+        <thead>
+            <tr>
+                <td widht="20%">买卖</td>
+                <td width="40%">价格</td>
+                <td width="40%">委托量</td>
+            </tr>
+        </thead>
+        <tbody>
+    $}
+    var tt = 'Ł';
+    if(symbol_type=='btc'){
+        tt = '฿';
+    }
+    for(var i=0,len=asks.length;i<len;i++){
+        var item = asks[i]
+        {$
+            <tr class="col-r">
+                <td>卖({%5-i%})</td>
+                <td>{%item[0]%}</td>
+                <td>{%tt%}{%item[1]%}</td>
+            </tr>
+        $}
+    }
+    for(var i=0,len=bids.length;i<len;i++){
+        var item = bids[i]
+        {$
+            <tr class="col-gn">
+                <td>买({%i+1%})</td>
+                <td>{%item[0]%}</td>
+                <td>{%tt%}{%item[1]%}</td>
+            </tr>
+        $}
+    }
+    
+    {$
+        </tbody>
+    $}
+    
+</script>
 
 </body>
 <script src="script/ki-min.js"></script>
+<script>
+</script>
 <script src="script/node-api.js"></script>
 <script src="script/index.js"></script>
 </html> 
