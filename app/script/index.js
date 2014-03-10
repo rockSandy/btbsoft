@@ -2,8 +2,8 @@
 ;(function(){
 
 var config = {
-    username : '',
-    password : '',
+    partner : '', //需要谨慎处理这2个值，目前只做调试用
+    secretKey : '',
     symbol_type : 'btc',
     btc_buy_price_min_add : 1,
     btc_buy_price_min_mul : -1,
@@ -13,12 +13,6 @@ var config = {
     btc_sell_price_min_mul : -1,
     btc_sell_num_min_add : 0.01,
     btc_sell_num_min_mul : -0.01
-}
-
-var ok_apis = {
-    //行情
-    ticker : ' https://www.okcoin.com/api/ticker.do',
-    depth  : ' https://www.okcoin.com/api/depth.do'
 }
 
 function extend(o,p){
@@ -35,15 +29,53 @@ function setLocal(name,value){
 function getLocal(name){
     return localStorage.getItem(name);
 }
-function urlEncode(url,options){
-    var args = '';
-    for(var i in options){
-        args += i + '=' + options[i];
-    }
-    if(args===''){
-        return url;
-    }else{
-        return url +'?'+args
+
+var httpsHelp = {
+
+    // urlEncode : function(options){
+    //     var args = '';
+    //     for(var i in options){
+    //         args += i + '=' + options[i];
+    //     }
+    //     return args
+    // },
+    defaultHttpsOption : {
+        hostname : 'www.okcoin.com',
+        port     : '443',
+        method   : 'POST',
+        headers: {
+             'Content-Type': 'application/x-www-form-urlencoded',
+             'Content-Length': 0
+         }
+    },
+    paths :{
+        userinfo : '/api/userinfo.do'
+    },
+    createMD5Sign:function (obj){ //生成签名的函数
+        //obj的参数顺序需要排序
+
+        var args = [], sortObj ={};
+        for(var i in obj){
+            args.push(i);
+        };
+        args.sort().forEach(function(n){
+            sortObj[n] = obj[n]
+        });
+
+        var s = node_api.querystring(obj)+config.secretKey;
+        return node_api.md5(s);
+        //return s.toUpperCase();
+    },
+    createOption : function(name,post_data_length){
+        var ret = this.defaultHttpsOption;
+        ret.path = this.paths[name];
+        ret.headers['Content-Length'] = post_data_length;
+        return ret;
+    },
+    createQuery  : function(obj){
+        obj.partner = config.partner;
+        obj.sign    = this.createMD5Sign(obj);
+        return node_api.querystring(obj);
     }
 }
 
@@ -149,8 +181,8 @@ dbus.on('last_btc_price_change',function(){
 function updateTickerData(){
     //console.log('run interval');
     var symbol_type = config.symbol_type;
-    var url = urlEncode(ok_apis.ticker,{symbol:symbol_type+'_cny'})
-    node_api.https_request(url,function(res){
+    var url = 'https://www.okcoin.com/api/ticker.do?symbol='+symbol_type+'_cny';
+    node_api.https.get(url,function(res){
         //console.log("statusCode: ", res.statusCode);
         res.on('data',function(d){
             //console.log(''+d)
@@ -166,10 +198,10 @@ setInterval(updateTickerData,1000);
 
 function updateDepthData(){
     var symbol_type = config.symbol_type;
-    var url = urlEncode(ok_apis.depth,{symbol:symbol_type+'_cny'});
-    node_api.https_request(url,function(res){
-        console.log("statusCode: ", res.statusCode);
-         res.on('data',function(d){
+    var url = 'https://www.okcoin.com/api/depth.do?symbol='+symbol_type+'_cny';
+    node_api.https.get(url,function(res){
+        //console.log("statusCode: ", res.statusCode);
+        res.on('data',function(d){
              //console.log(''+d)
              var json = JSON.parse(''+d);
              var k = 'depth_'+symbol_type;
@@ -182,6 +214,39 @@ function updateDepthData(){
 updateTickerData();
 setInterval(updateDepthData,1000)
 
+
+/**
+ * 刷新余额
+ */
+var uBusBuy = $.BindUI('bus-buy');
+dbus.on('free_cny_change',function(){
+    var cny = meta['free_cny'];
+    console.log('cny = '+cny)
+    uBusBuy.set('free_cny',cny)
+});
+
+function updateUserInfo(){
+    var query_data = httpsHelp.createQuery({});
+    var opt = httpsHelp.createOption('userinfo',query_data.length);
+    //console.log(JSON.stringify(opt))
+    var req = node_api.https.request(opt,function(res){
+        console.log("statusCode: ", res.statusCode);
+        res.on('data',function(d){
+            console.log(''+d);
+            var json = JSON.parse(''+d);
+            var free = json.info.funds.free;
+            meta['free_cny'] = free.cny;
+            meta['free_btc'] = free.btc;
+            meta['free_ltc'] = free.ltc;
+            dbus.trigger('free_cny_change');
+            dbus.trigger('free_btc_change');
+            dbus.trigger('free_ltc_change');
+        })
+    });
+    req.write( query_data +'\n');
+    req.end();
+}
+updateUserInfo();
 
 
 })();

@@ -22,12 +22,12 @@
     </header>
     <section>
         <div id="bus" class="fz-16">
-            <div class="form f-l w-40 t-l">
+            <div class="form f-l w-40 t-l" ki-app="bus-buy">
                 <fieldset>
                     <legend>买入</legend>
                     <div class="row">             
                         <div class="w-40 column">
-                            当前人民币余额: <span class="col-r">1000</span>
+                            当前人民币余额: <span class="col-r" ki-bind="innerHTML:free_cny"></span>
                         </div>
                         <div class="w-10 column"></div>
                         <div class="w-40 column">
@@ -118,11 +118,11 @@
             </div>
             <div class="bus-info f-l w-20" ki-app="bus-info">
                 <div class="box t-l">
-                    <div class="f-l w-60 t-c">
-                        最新价格：<span class="col-gn">￥</span>
+                    <div class="f-l w-60 t-r">
+                        最新价格:<span class="col-gn">￥</span>
                     </div>
                     
-                    <span class="col-gn" ki-bind="innerHTML:last_price"></span>
+                    <span class="col-gn t-l" ki-bind="innerHTML:last_price"></span>
                 </div>
                 <div class="box">
                     <table border="0" cellspacing="0" cellpadding="0" ki-tpl="bus-temp:trick_depth">
