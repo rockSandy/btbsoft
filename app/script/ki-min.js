@@ -329,3 +329,25 @@
     }
 
 })($);
+
+(function($){
+    //为代码提供组织结构
+    
+    //$.def(id,func);
+    //$.use(id);
+    var packages = {} , imports = {};
+    $.def = function(id,func){
+        packages[id] = func;
+    }
+    $.use = function(id){
+        if(!imports[id]){
+            if(packages[id]){
+                imports[id] = packages[id].call(this);
+            }else{
+                throw new Error('==> '+id+' is undefined')
+            }
+        }
+        return imports[id]
+    } 
+
+})($)

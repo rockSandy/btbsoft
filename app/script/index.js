@@ -1,45 +1,101 @@
+$.def('core',function(){
 
-;(function(){
-
-var config = {
-    partner : '', //需要谨慎处理这2个值，目前只做调试用
-    secretKey : '',
-    symbol_type : 'btc',
-    btc_buy_price_min_add : 1,
-    btc_buy_price_min_mul : -1,
-    btc_buy_num_min_add : 0.01,
-    btc_buy_num_max_mul : -0.01,
-    btc_sell_price_min_add : 1,
-    btc_sell_price_min_mul : -1,
-    btc_sell_num_min_add : 0.01,
-    btc_sell_num_min_mul : -0.01
-}
-
-function extend(o,p){
-    for(var i in p){
-        if(p[i]){
-            o[i] = p[i]
+    function isType(type) {
+        return function(obj) {
+            return {}.toString.call(obj) == "[object " + type + "]"
         }
     }
-    return o
-}
-function setLocal(name,value){
-    localStorage.setItem(name,value)
-}
-function getLocal(name){
-    return localStorage.getItem(name);
-}
 
-var httpsHelp = {
+    return {
+        isArray    : Array.isArray || isType("Array"),
+        isObject   : isType("Object"),
+        isFunction : isType("Function"),
+        isNumber   :  function(v){
+            return typeof v === 'number' && isFinite(v);
+        },
+        apply      : function(o,p){
+            for(var i in p){
+                o[i] = p[i];
+            }
+            return o;
+        }
+    }
+    
+});
 
-    // urlEncode : function(options){
-    //     var args = '';
-    //     for(var i in options){
-    //         args += i + '=' + options[i];
-    //     }
-    //     return args
-    // },
-    defaultHttpsOption : {
+$.def('observable',function(){
+
+
+    var Observable = {
+        __events__   : {},
+        on : function(key,func){
+            var keys = key.split(' ');
+            var me   = this;
+            keys.forEach(function(k){
+                if(!me.__events__[k]){
+                    me.__events__[k] = [];
+                }
+                me.__events__[k].push(func);
+            })
+            return this
+        },
+        off : function(key){
+            if(this.__events__[key]){
+                this.__events__[key].length = 0
+            }
+        },
+        trigger : function(key,args){
+
+            if(!this.__events__[key]){return null;}
+            this.__events__[key].forEach(function(f){
+                f.apply(f,args);
+            })
+            return this;
+        }
+    }
+    return Observable;
+
+});
+
+$.def('conf',function(){
+
+    var $core = $.use('core');
+
+    function get(name){
+        return localStorage.getItem(name);
+    }
+
+    var config = {
+        partner                 : '', //需要谨慎处理这2个值，目前只做调试用
+        secretKey               : '',
+        symbol_type             : get('symbol_type') || 'btc',
+        btc_buy_price_min_add   : get('btc_buy_price_min_add') || 1,
+        btc_buy_price_min_mul   : get('btc_buy_price_min_mul') || -1,
+        btc_buy_num_min_add     : get('btc_buy_num_min_add') || 0.01,
+        btc_buy_num_max_mul     : get('btc_buy_num_max_mul') || -0.01,
+        btc_sell_price_min_add  : get('btc_sell_price_min_add') || 1,
+        btc_sell_price_min_mul  : get('btc_sell_price_min_mul') || -1,
+        btc_sell_num_min_add    : get('btc_sell_num_min_add') || 0.01,
+        btc_sell_num_min_mul    : get('btc_sell_num_min_mul') || -0.01
+    }
+
+
+    return {
+        set  : function(name,value){
+            config[name] = value;
+            localStorage.setItem(name,value)
+        },
+        get  : function(name){
+            return config[name];
+        }
+    }
+});
+
+$.def('https',function(){
+    var $node = $.use('node');
+    var $conf = $.use('conf');
+
+    var options = {
         hostname : 'www.okcoin.com',
         port     : '443',
         method   : 'POST',
@@ -47,13 +103,12 @@ var httpsHelp = {
              'Content-Type': 'application/x-www-form-urlencoded',
              'Content-Length': 0
          }
-    },
-    paths :{
+    }
+    var paths = {
         userinfo : '/api/userinfo.do'
-    },
-    createMD5Sign:function (obj){ //生成签名的函数
+    }
+    function createMD5Sign(obj){
         //obj的参数顺序需要排序
-
         var args = [], sortObj ={};
         for(var i in obj){
             args.push(i);
@@ -61,65 +116,39 @@ var httpsHelp = {
         args.sort().forEach(function(n){
             sortObj[n] = obj[n]
         });
-
-        var s = node_api.querystring(obj)+config.secretKey;
-        return node_api.md5(s);
-        //return s.toUpperCase();
-    },
-    createOption : function(name,post_data_length){
-        var ret = this.defaultHttpsOption;
-        ret.path = this.paths[name];
-        ret.headers['Content-Length'] = post_data_length;
-        return ret;
-    },
-    createQuery  : function(obj){
-        obj.partner = config.partner;
-        obj.sign    = this.createMD5Sign(obj);
-        return node_api.querystring(obj);
+        var s = $node.querystring(obj)+$conf.get('secretKey');
+        return $node.md5(s);
     }
-}
-
-//初始化配置项参数
-function initConfig(){
-    var get = getLocal;
-    var local = {
-        username                : get('user_username'),
-        password                : get('user_password'),
-        symbol_type             : get('symbol_type'),
-        btc_buy_price_min_add   : get('btc_buy_price_min_add'),
-        btc_buy_price_min_mul   : get('btc_buy_price_min_mul'),
-        btc_buy_num_min_add     : get('btc_buy_num_min_add'),
-        btc_buy_num_max_mul     : get('btc_buy_num_max_mul'),
-        btc_sell_price_min_add  : get('btc_sell_price_min_add'),
-        btc_sell_price_min_mul  : get('btc_sell_price_min_mul'),
-        btc_sell_num_min_add    : get('btc_sell_num_min_add'),
-        btc_sell_num_min_mul    : get('btc_sell_num_min_mul')
+    return {
+        createOption : function(name,post_data_length){
+            var ret = options;
+            ret.path = paths[name];
+            ret.headers['Content-Length'] = post_data_length;
+            return ret;
+        },
+        createQuery  : function(obj){
+            obj.partner = $conf.get('partner');
+            obj.sign    = createMD5Sign(obj);
+            return $node.querystring(obj);
+        }
     }
-    return extend(config,local);
-}
-initConfig();
+})
+
+;(function(){
+
+var $https = $.use('https');
+var $core  = $.use('core');
+var $conf  = $.use('conf');
+var $node  = $.use('node');
+var $observable = $.use('observable');
+
 
 
 /**
  * 监听变量改变的机制
  */
-var dbus = {
-    ev   : {},
-    on : function(key,func){
-        if(!this.ev[key]){
-            this.ev[key] = []
-        }
-        this.ev[key].push(func);
-        return this
-    },
-    trigger : function(key){
-        if(!this.ev[key]){return ;}
-        this.ev[key].forEach(function(f){
-            f();
-        })
-        return this;
-    }
-}
+var dbus = Object.create($observable);
+
 
 var meta = {};
 
@@ -131,8 +160,7 @@ var uHeader = $.BindUI('header');
 
 function createSymbolTypeEvent(type){
     return function(){
-        setLocal('symbol_type',type);
-        config.symbol_type = type;
+        $conf.set('symbol_type',type);
         uHeader.set({
             btc_checked : type=='btc'?true:false,
             ltc_checked : type=='ltc'?true:false
@@ -141,8 +169,8 @@ function createSymbolTypeEvent(type){
 }
 
 uHeader.set({
-    btc_checked : config.symbol_type == 'btc' ? true : false,
-    ltc_checked : config.symbol_type == 'ltc' ? true : false,
+    btc_checked : $conf.get('symbol_type') == 'btc' ? true : false,
+    ltc_checked : $conf.get('symbol_type') == 'ltc' ? true : false,
     btc_click   : createSymbolTypeEvent('btc'),
     ltc_click   : createSymbolTypeEvent('ltc')
 });
@@ -152,22 +180,22 @@ uHeader.set({
  */
 var uBus = $.BindUI('bus-info');
 dbus.on('last_btc_price_change',function(){
-    if(config.symbol_type=='btc'){
+    if($conf.get('symbol_type')=='btc'){
         uBus.set('last_price',meta['last_btc_price'])
     }
 }).on('last_ltc_price_change',function(){
-    if(config.symbol_type==='ltc'){
+    if($conf.get('symbol_type')==='ltc'){
         uBus.set('last_price',meta['last_ltc_price'])
     }
 }).on('depth_btc_change',function(){
-    if(config.symbol_type==='btc'){
+    if($conf.get('symbol_type')==='btc'){
         var data = meta['depth_btc'];
         data.asks = data.asks.slice(data.asks.length-5);
         data.bids = data.bids.slice(0,5)
         uBus.set('trick_depth',data)
     }
 }).on('depth_ltc_change',function(){
-    if(config.symbol_type==='ltc'){
+    if($conf.get('symbol_type')==='ltc'){
         var data = meta['depth_ltc'];
         data.asks = data.asks.slice(data.asks.length-5);
         data.bids = data.bids.slice(0,5)
@@ -180,9 +208,9 @@ dbus.on('last_btc_price_change',function(){
  */
 function updateTickerData(){
     //console.log('run interval');
-    var symbol_type = config.symbol_type;
+    var symbol_type = $conf.get('symbol_type');
     var url = 'https://www.okcoin.com/api/ticker.do?symbol='+symbol_type+'_cny';
-    node_api.https.get(url,function(res){
+    $node.https.get(url,function(res){
         //console.log("statusCode: ", res.statusCode);
         res.on('data',function(d){
             //console.log(''+d)
@@ -197,9 +225,9 @@ updateTickerData();
 setInterval(updateTickerData,1000);
 
 function updateDepthData(){
-    var symbol_type = config.symbol_type;
+    var symbol_type = $conf.get('symbol_type');
     var url = 'https://www.okcoin.com/api/depth.do?symbol='+symbol_type+'_cny';
-    node_api.https.get(url,function(res){
+    $node.https.get(url,function(res){
         //console.log("statusCode: ", res.statusCode);
         res.on('data',function(d){
              //console.log(''+d)
@@ -226,10 +254,10 @@ dbus.on('free_cny_change',function(){
 });
 
 function updateUserInfo(){
-    var query_data = httpsHelp.createQuery({});
-    var opt = httpsHelp.createOption('userinfo',query_data.length);
-    //console.log(JSON.stringify(opt))
-    var req = node_api.https.request(opt,function(res){
+    var query_data = $https.createQuery({});
+    var opt =$https.createOption('userinfo',query_data.length);
+    //console.log(query_data)
+    var req = $node.https.request(opt,function(res){
         console.log("statusCode: ", res.statusCode);
         res.on('data',function(d){
             console.log(''+d);

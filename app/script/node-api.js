@@ -1,19 +1,16 @@
 
-;(function(global){
+$.def('node',function(){
 
-var node_https = require('https');
+    var https = require('https');
+    var crypt = require('crypto');
+    var querystring= require('querystring');
 
+    return {
+        https : https,
+        md5   : function(text){
+            return crypt.createHash('md5').update(text).digest('hex').toUpperCase();
+        },
+        querystring : querystring.stringify
+    }
 
-global.node_api = {
-    https_request : node_https.get
-}
-/*node_https.get('https://www.okcoin.com/api/ticker.do?symbol=ltc_cny',function(res){
-    console.log("statusCode: ", res.statusCode);
-    console.log("headers: ", res.headers);
-
-    res.on('data',function(d){
-        console.log('data'+d)
-    })
-})*/
-
-})(this);
+})
