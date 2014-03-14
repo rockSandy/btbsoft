@@ -16,7 +16,7 @@ body{
 .t-t{text-align: right;}
 .col-r{color:red;}
 .col-w{color:white;}
-.col-b{color:block;}
+.col-b{color:black;}
 .col-g{color:#3e343f;}
 .col-b{color:#28bbd0;}
 .col-y{color:#ff6e00;}
@@ -24,6 +24,7 @@ body{
 .dp-n{display: none;}
 .dp-b{display: block;}
 .dp-i{display:inline-block;}
+.vb-h{visibility: hidden;}
 .line-w{height:1px;background-color:#555;}
 .cu-p{cursor: pointer;}
 .fz-12{font-size:12px;}
@@ -37,6 +38,9 @@ body{
 .w-40{width:40%;}
 .w-50{width:50%;}
 .w-60{width:60%;}
+.w-70{width:70%;}
+.w-80{width:80%;}
+.w-90{width:90%;}
 .fz-f{
     font-family: sans-serif;
 }
@@ -174,4 +178,56 @@ input[type="text"]:focus{
 }
     .mi-btn:hover{
         background-color:#DDD;
+    }
+
+
+/**
+ * 登陆
+ */
+.login_in_box{
+    position: absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height: 100%;
+    background-color:rgba(0,0,0,0.5);
+}
+    .login_in_box .form{
+        width:550px;
+        height:200px;
+        position: absolute;
+        top:50%;
+        left:50%;
+        margin-top:-150px;
+        margin-left: -275px;
+        background-color:#EEE;
+
+    }
+    .login_in_box input{
+        width: 350px
+    }
+/**
+ * 设置
+ */
+.settings_box{
+    position: absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height: 100%;
+    background-color:rgba(0,0,0,0.5);
+}
+    .settings_box .form{
+        width:600px;
+        height:270px;
+        position: absolute;
+        top:50%;
+        left:50%;
+        margin-top:-135px;
+        margin-left:-300px;
+        background-color:#EEE;
+    }
+    .settings_box .row{margin-top: 10px;}
+    .settings_box input{
+        width:50px;
     }

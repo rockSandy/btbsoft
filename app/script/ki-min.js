@@ -186,6 +186,7 @@
     var DB = function(element){
 
         this.data  = {};//与UI绑定的数据对象
+        this.prox  = {};//代理get值
 
         this._event= {};
 
@@ -207,7 +208,13 @@
             this.triggerHandlerList(keys);
         },
         get : function(key){
-           return this.data[key];        
+            if(this.prox[key]){
+                return this.prox[key]();
+            }
+            return this.map(key);        
+        },
+        map : function(key){
+            return this.data[key];
         },
         /**
          * 绑定监听函数
@@ -298,16 +305,24 @@
         DIRS.push(dir);
     }
 
-    register('ki-bind',function(element,dir){
+    register('ki-set',function(element,dir){
         var me = this;
         var $el = $(element);
         dir.split('|').forEach(function(directive){
             var args = directive.split(':');
             me.addListener(args[1],function(){
                 //通过get接口将字符串转换成值
-                $el.set(args[0],me.get(args[1]))
+                $el.set(args[0],me.map(args[1]))
             })
         })
+    });
+
+    register('ki-get',function(element,dir){
+        var args = dir.split(':');
+        var $el  = $(element);
+        this.prox[args[1]] = function(){
+            return $el.get(args[0]);
+        }
     })
 
     register('ki-tpl',function(element,dir){
@@ -316,7 +331,7 @@
         var me   = this;
         var tmpl = Ya($('#'+args[0]).get('innerHTML'));
         me.addListener(args[1],function(){
-            element.innerHTML = tmpl.render(me.get(args[1]))
+            element.innerHTML = tmpl.render(me.map(args[1]))
         })
 
     })

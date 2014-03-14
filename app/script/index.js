@@ -66,17 +66,17 @@ $.def('conf',function(){
     }
 
     var config = {
-        partner                 : '', //需要谨慎处理这2个值，目前只做调试用
-        secretKey               : '',
-        symbol_type             : get('symbol_type') || 'btc',
-        btc_buy_price_min_add   : get('btc_buy_price_min_add') || 1,
-        btc_buy_price_min_mul   : get('btc_buy_price_min_mul') || -1,
-        btc_buy_num_min_add     : get('btc_buy_num_min_add') || 0.01,
-        btc_buy_num_max_mul     : get('btc_buy_num_max_mul') || -0.01,
-        btc_sell_price_min_add  : get('btc_sell_price_min_add') || 1,
-        btc_sell_price_min_mul  : get('btc_sell_price_min_mul') || -1,
-        btc_sell_num_min_add    : get('btc_sell_num_min_add') || 0.01,
-        btc_sell_num_min_mul    : get('btc_sell_num_min_mul') || -0.01
+        partner             : get('partner'), //需要谨慎处理这2个值，目前只做调试用
+        secretKey           : get('secretKey'),
+        symbol_type         : get('symbol_type') || 'btc',
+        btc_buy_price_min   : get('btc_buy_price_min') || 1,
+        btc_buy_num_min     : get('btc_buy_num_min') || 0.01,
+        btc_sell_price_min  : get('btc_sell_price_min') || 1,
+        btc_sell_num_min    : get('btc_sell_num_min') || 0.01,
+        ltc_buy_price_min   : get('ltc_buy_price_min') || 1,
+        ltc_buy_num_min     : get('ltc_buy_num_min') || 0.01,
+        ltc_sell_price_min  : get('ltc_sell_price_min') || 1,
+        ltc_sell_num_min    : get('ltc_sell_num_min') || 0.01
     }
 
 
@@ -134,6 +134,57 @@ $.def('https',function(){
     }
 })
 
+$.def('settings',function(){
+    var $conf = $.use('conf');
+
+    var uSetting = $.BindUI('settings');
+    uSetting.set({
+        settings_ok : function(){
+            set();
+            hide();
+        },
+        settings_chance : function(){
+            init();
+            hide();
+        }
+    })
+    var names = [
+        'btc_buy_price_min',
+        'btc_buy_num_min',
+        'btc_sell_price_min',
+        'btc_sell_num_min',
+        'ltc_buy_price_min',
+        'ltc_buy_num_min',
+        'ltc_sell_price_min',
+        'ltc_sell_num_min'
+    ]
+
+    function init(){
+        var obj = {};
+        names.forEach(function(v){
+            obj[v] = $conf.get(v);
+        })
+        uSetting.set(obj)
+    }
+    function set(){
+        names.forEach(function(v){
+            var value = uSetting.get(v);
+            $conf.set(v,value);
+        })
+    }
+    function show(){
+        uSetting.set('state','-dp-n');
+    }
+    function hide(){
+        uSetting.set('state','+dp-n');
+    }
+    return {
+        init : init,
+        show : show,
+        hide : hide
+    }
+})
+
 ;(function(){
 
 var $https = $.use('https');
@@ -141,6 +192,8 @@ var $core  = $.use('core');
 var $conf  = $.use('conf');
 var $node  = $.use('node');
 var $observable = $.use('observable');
+
+var $settings = $.use('settings');
 
 
 
@@ -172,7 +225,14 @@ uHeader.set({
     btc_checked : $conf.get('symbol_type') == 'btc' ? true : false,
     ltc_checked : $conf.get('symbol_type') == 'ltc' ? true : false,
     btc_click   : createSymbolTypeEvent('btc'),
-    ltc_click   : createSymbolTypeEvent('ltc')
+    ltc_click   : createSymbolTypeEvent('ltc'),
+    show_login_in: function(){
+        uLogin.set('state','-dp-n');
+    },
+    show_settings: function(){
+        $settings.init();
+        $settings.show();
+    }
 });
 
 /**
@@ -181,11 +241,22 @@ uHeader.set({
 var uBus = $.BindUI('bus-info');
 dbus.on('last_btc_price_change',function(){
     if($conf.get('symbol_type')=='btc'){
-        uBus.set('last_price',meta['last_btc_price'])
+        var btc_price = meta['last_btc_price'];
+        var cny       = meta['free_cny'];
+        console.log(cny,btc_price)
+        uBus.set('last_price',btc_price);
+        if(cny){
+            uBusBuy.set('able_buy',cny/btc_price)
+        }
     }
 }).on('last_ltc_price_change',function(){
     if($conf.get('symbol_type')==='ltc'){
-        uBus.set('last_price',meta['last_ltc_price'])
+        var ltc_price = meta['last_ltc_price'];
+        var cny       = meta['free_cny'];
+        uBus.set('last_price',meta['last_ltc_price']);
+        if(cny){
+            uBusBuy.set('able_buy',cny/ltc_price);
+        }
     }
 }).on('depth_btc_change',function(){
     if($conf.get('symbol_type')==='btc'){
@@ -221,8 +292,7 @@ function updateTickerData(){
         })
     })
 };
-updateTickerData();
-setInterval(updateTickerData,1000);
+
 
 function updateDepthData(){
     var symbol_type = $conf.get('symbol_type');
@@ -239,8 +309,6 @@ function updateDepthData(){
         })
     })
 }
-updateTickerData();
-setInterval(updateDepthData,1000)
 
 
 /**
@@ -249,9 +317,30 @@ setInterval(updateDepthData,1000)
 var uBusBuy = $.BindUI('bus-buy');
 dbus.on('free_cny_change',function(){
     var cny = meta['free_cny'];
-    console.log('cny = '+cny)
-    uBusBuy.set('free_cny',cny)
+    var k = 'last_'+$conf.get('symbol_type')+'_price';
+    var last_price = meta[k];
+    uBusBuy.set('free_cny',cny);
+    if(last_price){
+        uBusBuy.set('able_buy_btc',cny/last_price);
+    }
 });
+
+uBusBuy.set({
+    toggle_asset: function(){
+        var f = uBusBuy.get('class_asset');
+        if(f=='+vb-h'){
+            uBusBuy.set({
+                class_asset : '-vb-h',
+                button_show_name : '隐藏总资产'
+            })
+        }else{
+            uBusBuy.set({
+                class_asset : '+vb-h',
+                button_show_name : '显示总资产'
+            })
+        }
+    }
+})
 
 function updateUserInfo(){
     var query_data = $https.createQuery({});
@@ -274,7 +363,36 @@ function updateUserInfo(){
     req.write( query_data +'\n');
     req.end();
 }
-updateUserInfo();
+
+    // updateUserInfo();
+    // updateTickerData();
+    // setInterval(updateDepthData,1000)
+    // updateTickerData();
+    // setInterval(updateTickerData,1000); 
+
+
+
+var uLogin = $.BindUI('login_in');
+
+uLogin.set({
+    partner : $conf.get('partner'),
+    secret_key : $conf.get('secretKey'),
+    login_in : function(){
+        var p = uLogin.get('partner');
+        var s = uLogin.get('secret_key');
+        $conf.set('partner',p.trim());
+        $conf.set('secretKey',s.trim());
+        uLogin.set('state','+dp-n');
+    },
+    login_chance : function(){
+        uLogin.set({
+            state : '+dp-n',
+            partner : $conf.get('partner'),
+            secret_key : $conf.get('secretKey')
+        });
+    }
+})
+
 
 
 })();

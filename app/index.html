@@ -10,15 +10,15 @@
 <div class="container">
     <header ki-app="header">
         <div class="header-btn f-l fz-16">
-            <input type="checkbox" ki-bind="checked:btc_checked|onclick:btc_click">
+            <input type="checkbox" ki-set="checked:btc_checked|onclick:btc_click">
             比特币(BTC)交易
         </div>
         <div class="header-btn f-l fz-16">
-             <input type="checkbox" ki-bind="checked:ltc_checked|onclick:ltc_click">
+             <input type="checkbox" ki-set="checked:ltc_checked|onclick:ltc_click">
             莱特币(LTC)交易
         </div>
-        <div class="header-btn f-r fz-25">账号</div>
-        <div class="header-btn f-r fz-25">设置</div>
+        <div class="header-btn f-r fz-25" ki-set="onclick:show_login_in">账号</div>
+        <div class="header-btn f-r fz-25" ki-set="onclick:show_settings">设置</div>
     </header>
     <section>
         <div id="bus" class="fz-16">
@@ -27,19 +27,19 @@
                     <legend>买入</legend>
                     <div class="row">             
                         <div class="w-40 column">
-                            当前人民币余额: <span class="col-r" ki-bind="innerHTML:free_cny"></span>
+                            当前人民币余额: <span class="col-r" ki-set="innerHTML:free_cny"></span>
                         </div>
                         <div class="w-10 column"></div>
                         <div class="w-40 column">
-                            可买BTC: <span class="col-r">0.1</span>
+                            可买BTC: <span class="col-r" ki-set="innerHTML:able_buy"></span>
                         </div>
                     </div>
                     <div class="row">             
-                        <div class="w-20 column">
-                            总资产: <span class="col-r">1000</span>
+                        <div class="w-20 column" ki-set="$:class_asset">
+                            总资产: <span class="col-r" >1000</span>
                         </div>
                         <div class="w-30 column">
-                            <button class="btn-small">隐藏总资产</button>
+                            <button class="btn-small" ki-set="onclick:toggle_asset|innerHTML:button_show_name">隐藏总资产</button>
                         </div>
                         <div class="w-20 column">
                             <button class="btn-small">刷新</button>
@@ -122,7 +122,7 @@
                         最新价格:<span class="col-gn">￥</span>
                     </div>
                     
-                    <span class="col-gn t-l" ki-bind="innerHTML:last_price"></span>
+                    <span class="col-gn t-l" ki-set="innerHTML:last_price"></span>
                 </div>
                 <div class="box">
                     <table border="0" cellspacing="0" cellpadding="0" ki-tpl="bus-temp:trick_depth">
@@ -222,6 +222,110 @@
         </div>
     </section>
     <footer></footer>
+</div>
+<div class="login_in_box dp-n" ki-app="login_in" ki-set="$:state">
+    <div class="form">
+        <div class="row">
+        </div>
+        <div class="row">
+            <div class="column w-30">
+                partner :
+            </div>
+            <div class="column w-60 t-l">
+                <input type="text" ki-get="value:partner" 
+                       ki-set="value:partner">
+            </div>
+        </div>
+        <div class="row">
+        </div>
+        <div class="row">
+            <div class="column w-30">
+                secretKey:
+            </div>
+            <div class="column w-60 t-l">
+                <input type="text" ki-get="value:secret_key"
+                    ki-set="value:secret_key">
+            </div>
+        </div>
+        <div class="row"></div>
+        <div class="row">
+            <button class="btn-large" ki-set="onclick:login_in">确定</button>
+            <button class="btn-large" ki-set="onclick:login_chance">取消</button>
+        </div>
+    </div>
+</div>
+<div class="settings_box dp-n" ki-app="settings" ki-set="$:state">
+    <div class="form">
+        <div class="row"></div>
+        <div class="row">
+            <div class="column w-30">
+                BTC购买价格微调 :
+            </div>
+            <div class="column w-20 t-l">
+                <input type="text" ki-set="value:btc_buy_price_min"
+                ki-get="value:btc_buy_price_min">
+            </div>
+            <div class="column w-30">
+                LTC购买价格微调 :
+            </div>
+            <div class="column w-20  t-l">
+                <input type="text" ki-set="value:ltc_buy_price_min"
+                ki-get="value:ltc_buy_price_min">
+            </div>
+        </div>
+        <div class="row">
+            <div class="column w-30">
+                BTC购买数量微调 :
+            </div>
+            <div class="column w-20 t-l">
+                <input type="text" ki-set="value:btc_buy_num_min"
+                ki-get="value:btc_buy_num_min">
+            </div>
+            <div class="column w-30">
+                LTC购买数量微调 :
+            </div>
+            <div class="column w-20  t-l">
+                <input type="text" ki-set="value:ltc_buy_num_min"
+                ki-get="value:ltc_buy_num_min">
+            </div>
+        </div>
+        <div class="row">
+            <div class="column w-30">
+                BTC卖出价格微调 :
+            </div>
+            <div class="column w-20 t-l">
+                <input type="text" ki-set="value:btc_sell_price_min"
+                ki-get="value:btc_sell_price_min">
+            </div>
+            <div class="column w-30">
+                LTC卖出价格微调 :
+            </div>
+            <div class="column w-20  t-l">
+                <input type="text" ki-set="value:ltc_sell_price_min"
+                ki-get="value:ltc_sell_price_min">
+            </div>
+        </div>
+        <div class="row">
+            <div class="column w-30">
+                BTC卖出数量微调 :
+            </div>
+            <div class="column w-20 t-l">
+                <input type="text" ki-set="value:btc_sell_num_min"
+                ki-get="value:btc_sell_num_min">
+            </div>
+            <div class="column w-30">
+                LTC卖出数量微调 :
+            </div>
+            <div class="column w-20  t-l">
+                <input type="text" ki-set="value:ltc_sell_num_min"
+                ki-get="value:ltc_sell_num_min">
+            </div>
+        </div>
+        <div class="row">
+            <button class="btn-large" ki-set="onclick:settings_ok">确定</button>
+            <button class="btn-large" ki-set="onclick:settings_chance">取消</button>
+        </div>
+    </div>
 </div>
 
 
