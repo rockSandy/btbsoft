@@ -13,7 +13,9 @@
     "height":700,
     "position": "mouse",
     "min_width": 1300,
-    "min_height": 550
+    "min_height": 700,
+    "max_width":1300,
+    "max_height":700
   },
   "webkit": {
     "plugin": false

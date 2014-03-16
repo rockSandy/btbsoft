@@ -13,7 +13,7 @@ body{
 .f-r{float:right;}
 .t-c{text-align: center;}
 .t-l{text-align: left;}
-.t-t{text-align: right;}
+.t-r{text-align: right;}
 .col-r{color:red;}
 .col-w{color:white;}
 .col-b{color:black;}
@@ -69,12 +69,15 @@ header{
 }
 section {
     background-color:#EAEAEA;
-    -webkit-box-flex: 1;
-    -moz-box-flex:1;
+    height:325px;
+    0-webkit-box-flex: 1;
+    0-moz-box-flex:1;
 }
 footer{
     background-color:#FFC;
-    height:200px;
+    height:250px;
+    -webkit-box-flex: 1;
+    -moz-box-flex:1;
 }
 
 
@@ -156,10 +159,11 @@ button.btn-large{
     min-width:150px;
 }
 
+
 input[type="text"]{
     background:none;
     border:none;
-    width:50px;
+    width:70px;
     height:30px;
     font-size: 16px;
     padding:0 5px; 
@@ -169,17 +173,37 @@ input[type="text"]{
 input[type="text"]:focus{
     outline:2px solid #3eb5c6;
 } 
+input[type="text"].input-err{
+    outline:1px solid red;
+}
 
 .mi-btn{
     width:26px;
     font-size: 12px;
     cursor: pointer;
-    border:2px solid #AAA;
-}
-    .mi-btn:hover{
-        background-color:#DDD;
-    }
+    background:#DDD;
 
+}
+
+/**
+ * 用户挂单
+ */
+/* .warning{
+    width:200px;
+} */
+.user-order{
+    height:300px;
+    width: 1300px;
+    0margin-left: 200px;
+    background-color:#EEE;
+}
+.user-order-btns{width:70px;}
+.user-order-btns div{margin-top: 10px;}
+.user-order-table{width:1230px;}
+.order-wrap{
+    height: 270px;
+    overflow: auto;
+}
 
 /**
  * 登陆

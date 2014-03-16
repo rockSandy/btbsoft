@@ -31,18 +31,18 @@
                         </div>
                         <div class="w-10 column"></div>
                         <div class="w-40 column">
-                            可买BTC: <span class="col-r" ki-set="innerHTML:able_buy"></span>
+                            可买<span ki-set="innerHTML:symbol"></span>: <span class="col-r" ki-set="innerHTML:able_buy"></span>
                         </div>
                     </div>
                     <div class="row">             
                         <div class="w-20 column" ki-set="$:class_asset">
-                            总资产: <span class="col-r" >1000</span>
+                            总资产: <span class="col-r" ki-set="innerHTML:total_worth"></span>
                         </div>
                         <div class="w-30 column">
                             <button class="btn-small" ki-set="onclick:toggle_asset|innerHTML:button_show_name">隐藏总资产</button>
                         </div>
                         <div class="w-20 column">
-                            <button class="btn-small">刷新</button>
+                            <button class="btn-small" ki-set="onclick:update_free">刷新</button>
                         </div>
                     </div>
                     <div class="line-w"></div>
@@ -55,63 +55,80 @@
                     </div>
                     <div class="row t-c">
                         <div class="w-30 column">
-                            <div class="mi-btn dp-i" title="微调">-</div
-                            ><input type="text" class="dp-i"
-                            ><div class="mi-btn dp-i" title="微调">+</div>
+                            <div class="mi-btn dp-i" title="微调" ki-set="onclick:buy_price_mul">-</div>
+                            <input type="text" class="dp-i" 
+                            ki-set="value:buy_price|onblur:update_total" 
+                            ki-get="value:buy_price">
+                            <div class="mi-btn dp-i" title="微调" ki-set="onclick:buy_price_add">+</div>
                         </div>
                         <div class="w-5 column fz-20">*</div>
                         <div class="w-30 column">
-                            <div class="mi-btn dp-i" title="微调">-</div
-                            ><input type="text" class="dp-i"
-                            ><div class="mi-btn dp-i" title="微调">+</div>
+                            <div class="mi-btn dp-i" title="微调" ki-set="onclick:buy_num_mul">-</div>
+                            <input type="text" class="dp-i" 
+                            ki-set="value:buy_num|onblur:update_total" 
+                            ki-get="value:buy_num">
+                            <div class="mi-btn dp-i" title="微调" ki-set="onclick:buy_num_add">+</div>
                         </div>
                         <div class="w-5 column fz-20">=</div>
                         <div class="w-30 column">
-                            <input type="text" disabled="disabled">
+                            <input type="text" disabled="disabled" ki-set="value:total_price" ki-get="value:total_price">
                         </div>
                     </div>
                     <div class="row t-c" style="margin-top:10px;">
                         <div class="w-30 column">
-                            <button class="btn-small">按卖1出价</button>
+                            <button class="btn-small" 
+                            ki-set="onclick:set_price_1">按卖1出价</button>
                         </div>
                         <div class="w-5 column"></div>
                         <div class="w-60 column">
-                            <button class="btn-small">全部</button>
-                            <button class="btn-small">1/2</button>
-                            <button class="btn-small">1/3</button>
-                            <button class="btn-small">1/4</button>
-                            <button class="btn-small">1/5</button>
+                            <button class="btn-small" 
+                            ki-set="onclick:buy_total_pro_1">全部</button>
+                            <button class="btn-small" 
+                            ki-set="onclick:buy_total_pro_2">1/2</button>
+                            <button class="btn-small"
+                            ki-set="onclick:buy_total_pro_3">1/3</button>
+                            <button class="btn-small"
+                            ki-set="onclick:buy_total_pro_4">1/4</button>
+                            <button class="btn-small"
+                            ki-set="onclick:buy_total_pro_5">1/5</button>
                         </div>
                     </div>
                     <div class="row t-c" style="margin-top:10px;">
                         <div class="w-30 column">
-                            <button class="btn-small">按卖5出价</button>
+                            <button class="btn-small"
+                            ki-set="onclick:set_price_5">按卖5出价</button>
                         </div>
                         <div class="w-5 column"></div>
                         <div class="w-60 column">
-                            <button class="btn-small">1/6</button>
-                            <button class="btn-small">1/7</button>
-                            <button class="btn-small">1/8</button>
-                            <button class="btn-small">1/9</button>
-                            <button class="btn-small">1/10</button>
+                            <button class="btn-small"
+                            ki-set="onclick:buy_total_pro_6">1/6</button>
+                            <button class="btn-small"
+                            ki-set="onclick:buy_total_pro_7">1/7</button>
+                            <button class="btn-small"
+                            ki-set="onclick:buy_total_pro_8">1/8</button>
+                            <button class="btn-small"
+                            ki-set="onclick:buy_total_pro_9">1/9</button>
+                            <button class="btn-small"
+                            ki-set="onclick:buy_total_pro_10">1/10</button>
                         </div>
                     </div>
                     <div class="row t-c" style="margin-top:10px;">
                         <div class="w-30 column">
-                            <button class="btn-small">按卖1价多1分</button>
+                            <button class="btn-small"
+                            ki-set="onclick:set_price_1_min">按卖1价多1分</button>
                         </div>
                         <div class="w-10 column"></div>
-                        <div class="w-60 column t-l">
+                        <!-- <div class="w-60 column t-l">
                             交易密码 : &nbsp;
                             <input type="text" style="width:100px;">
-                        </div>
+                        </div> -->
                     </div>
                     <div class="row t-c" style="margin-top:10px;">
                         <div class="w-40 column">
                             
                         </div>
                         <div class="w-60 column t-l">
-                            <button class="btn-large">立即买入</button>
+                            <button class="btn-large" ki-set="onclick:buy_now">立即买入</button>
                         </div>
                     </div>
                 </fieldset>
@@ -131,21 +148,21 @@
                 </div>
                 
             </div>
-            <div class="form f-l w-40 t-l">
+            <div class="form f-l w-40 t-l" ki-app="bus-sell">
                 <fieldset>
-                    <legend>买入</legend>
+                    <legend>卖出</legend>
                     <div class="row">             
                         <div class="w-40 column">
-                            BTC/LTC余额: <span class="col-r">12</span>
+                            <span ki-set="innerHTML:symbol"></span>余额: <span class="col-r" ki-set="innerHTML:amount"></span>
                         </div>
                         <div class="w-10 column"></div>
                         <div class="w-40 column">
-                            可卖人民币: <span class="col-r">1000</span>
+                            可卖人民币: <span class="col-r" ki-set="innerHTML:able_to_cny"></span>
                         </div>
                     </div>
                     <div class="row">             
                         <div class="w-20 column">
-                            <button class="btn-small">刷新余额</button>
+                            <button class="btn-small" ki-set="onclick:update_sell_info">刷新余额</button>
                         </div>
 
                     </div>
@@ -159,69 +176,120 @@
                     </div>
                     <div class="row t-c">
                         <div class="w-30 column">
-                            <div class="mi-btn dp-i" title="微调">-</div
-                            ><input type="text" class="dp-i"
-                            ><div class="mi-btn dp-i" title="微调">+</div>
+                            <div class="mi-btn dp-i" title="微调"
+                            ki-set="onclick:sell_price_mul">-</div>
+                            <input type="text" class="dp-i"
+                            ki-set="value:sell_price|onblur:update_total"
+                            ki-get="value:sell_price">
+                            <div class="mi-btn dp-i" title="微调"
+                            ki-set="onclick:sell_price_add">+</div>
                         </div>
                         <div class="w-5 column fz-20">*</div>
                         <div class="w-30 column">
-                            <div class="mi-btn dp-i" title="微调">-</div
-                            ><input type="text" class="dp-i"
-                            ><div class="mi-btn dp-i" title="微调">+</div>
+                            <div class="mi-btn dp-i" title="微调"
+                            ki-set="onclick:sell_num_mul">-</div>
+                            <input type="text" class="dp-i"
+                            ki-set="value:sell_num|onblur:update_total"
+                            ki-get="value:sell_num">
+                            <div class="mi-btn dp-i" title="微调"
+                            ki-set="onclick:sell_num_add">+</div>
                         </div>
                         <div class="w-5 column fz-20">=</div>
                         <div class="w-30 column">
-                            <input type="text" disabled="disabled">
+                            <input type="text" disabled="disabled" ki-set="value:about_total_price">
                         </div>
                     </div>
                     <div class="row t-c" style="margin-top:10px;">
                         <div class="w-30 column">
-                            <button class="btn-small">按买5出价</button>
+                            <button class="btn-small" ki-set="onclick:set_price_5">按买5出价</button>
                         </div>
                         <div class="w-5 column"></div>
                         <div class="w-60 column">
-                            <button class="btn-small">全部</button>
-                            <button class="btn-small">1/2</button>
-                            <button class="btn-small">1/3</button>
-                            <button class="btn-small">1/4</button>
-                            <button class="btn-small">1/5</button>
+                            <button class="btn-small"
+                            ki-set="onclick:sell_total_pro_1">全部</button>
+                            <button class="btn-small"
+                            ki-set="onclick:sell_total_pro_2">1/2</button>
+                            <button class="btn-small"
+                            ki-set="onclick:sell_total_pro_3">1/3</button>
+                            <button class="btn-small"
+                            ki-set="onclick:sell_total_pro_4">1/4</button>
+                            <button class="btn-small"
+                            ki-set="onclick:sell_total_pro_5">1/5</button>
                         </div>
                     </div>
                     <div class="row t-c" style="margin-top:10px;">
                         <div class="w-30 column">
-                            <button class="btn-small">卖1价少1分挂单</button>
+                            <button class="btn-small" ki-set="onclick:set_price_1_min">卖1价少1分挂单</button>
                         </div>
                         <div class="w-5 column"></div>
                         <div class="w-60 column">
-                            <button class="btn-small">1/6</button>
-                            <button class="btn-small">1/7</button>
-                            <button class="btn-small">1/8</button>
-                            <button class="btn-small">1/9</button>
-                            <button class="btn-small">1/10</button>
+                            <button class="btn-small"
+                            ki-set="onclick:sell_total_pro_6">1/6</button>
+                            <button class="btn-small"
+                            ki-set="onclick:sell_total_pro_7">1/7</button>
+                            <button class="btn-small"
+                            ki-set="onclick:sell_total_pro_8">1/8</button>
+                            <button class="btn-small"
+                            ki-set="onclick:sell_total_pro_9">1/9</button>
+                            <button class="btn-small"
+                            ki-set="onclick:sell_total_pro_10">1/10</button>
                         </div>
                     </div>
                     <div class="row t-c" style="margin-top:10px;">
                         <div class="w-30 column">
                         </div>
                         <div class="w-10 column"></div>
-                        <div class="w-60 column t-l">
+                        <!-- <div class="w-60 column t-l">
                             交易密码 : &nbsp;
                             <input type="text" style="width:100px;">
-                        </div>
+                        </div> -->
                     </div>
                     <div class="row t-c" style="margin-top:10px;">
                         <div class="w-40 column">
                             
                         </div>
                         <div class="w-60 column t-l">
-                            <button class="btn-large">立即卖出</button>
+                            <button class="btn-large" ki-set="onclick:sell_now">立即卖出</button>
                         </div>
                     </div>
                 </fieldset>
             </div>       
         </div>
     </section>
-    <footer></footer>
+    <footer>
+       <!--  <div class="warning f-l">
+           价格预警预留区域
+       </div> -->
+        <div class="user-order" ki-app="user-order">
+            <div class="user-order-btns f-r">
+                <div>
+                    <button ki-set="onclick:update_order">刷新</button>
+                </div>
+            </div>
+            <div class="user-order-table">
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <thead>
+                        <tr>                                                  
+                            <td width="10%">委托时间</td>
+                            <td width="10%">委托类别</td>
+                            <td width="10%">委托数量</td>
+                            <td width="10%">委托价格</td>
+                            <td width="10%">成交数量</td>
+                            <td width="10%">成交金额</td>
+                            <td width="10%">平均成交价</td>
+                            <td width="10%">尚未成交</td>
+                            <td width="10%">操作/状态</td>
+                        </tr>
+                    </thead>
+                </table>
+                <div class="order-wrap">
+                    <table border="0" cellspacing="0" cellpadding="0" ki-tpl="orders-temp:orders_list">
+                        
+                    </table>
+                </div>
+            </div>         
+        </div>
+    </footer>
 </div>
 <div class="login_in_box dp-n" ki-app="login_in" ki-set="$:state">
     <div class="form">
@@ -367,10 +435,78 @@
     
     {$
         </tbody>
-    $}
-    
+    $}    
 </script>
+<script type="text/template" id="orders-temp">
+var symbol = '';
+if(symbol_type==='btc'){
+    symbol = '฿'
+}
+if(symbol_type==='ltc'){
+    symbol = 'Ł'
+}
+function getDateString(date){
+    var y = date.getFullYear();
+    var m = date.getMonth()+1;
+    var d = date.getDate();
 
+    var h = date.getHours();
+    var m = date.getMinutes();
+    var s = date.getSeconds();
+    return y+'-'+m+'-'+d+' '+h+':'+m+':'+s
+}
+function format(obj){
+    obj.showDate = getDateString(new Date(obj.createDate));
+    if(obj.type.indexOf('market')!==-1){
+        //暂不支持市价单
+        return {showType:'市价单'}
+    }
+    switch(obj.type){
+        case 'buy':
+            obj.showType = '买入';
+            break
+        case 'sell':   
+            obj.showType = '卖出';
+            break;
+    }
+    switch(obj.status){
+        case -1 :
+            obj.showStatus = '已撤销';
+            break;
+        case 0 :
+            obj.showStatus = '未成交';
+            obj.editer = '<button onclick="delete_order(\''+obj.orders_id+'\')">撤销</button>'
+            break;
+        case 1:
+            obj.showStatus = '部分成交';
+            obj.editer = '<button onclick="delete_order(\''+obj.orders_id+'\')">撤销</button>'
+            break;
+        case 2:
+            obj.showStatus = '完全成交';
+            break;
+    }
+    obj.deal_price = parseFloat(obj.avg_rate)*parseFloat(obj.deal_amount);
+    obj.open_amount = parseFloat(obj.amount)-parseFloat(obj.deal_amount);
+    return obj
+}
+
+for(var i=0,len=orders.length;i<len;i++){
+    var item = format(orders[i]);
+    {$
+        <tr>
+        <td width="10%">{%item.showDate%}</td>
+        <td width="10%">{%item.showType%}</td>
+        <td width="10%">{%symbol%}{%item.amount%}</td>
+        <td width="10%">{%item.rate%}</td>
+        <td width="10%">{%symbol%}{%item.deal_amount%}</td>
+        <td width="10%">￥{%item.deal_price%}</td>
+        <td width="10%">￥{%item.avg_rate%}</td>
+        <td width="10%">{%symbol%}{%item.open_amount%}</td>
+        <td width="10%">{%item.showStatus%}{%item.editer%}</td>
+        </tr>
+    $}
+}
+</script>
 </body>
 <script src="script/ki-min.js"></script>
 <script src="script/node-api.js"></script>
